@@ -496,7 +496,10 @@ input, textarea { font-family: var(--font); }
 }
 .ideias-meal-imgs {
   background: white; padding: 16px;
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+@media (max-width: 720px) {
+  .ideias-meal-imgs { grid-template-columns: repeat(2, 1fr); }
 }
 .ideias-item {
   aspect-ratio: 1; border: 2px dashed var(--border); border-radius: 8px;
@@ -508,6 +511,74 @@ input, textarea { font-family: var(--font); }
 .ideias-item.empty svg { width: 32px; height: 32px; color: var(--muted); opacity: .4; }
 .ideias-item.has-img { border-style: solid; border-color: var(--border); }
 .ideias-label { font-size: 11px; margin-top: 6px; text-align: center; color: var(--muted); }
+
+/* ════════════════════════════════════════════════════════
+   WELCOME MODAL
+════════════════════════════════════════════════════════ */
+.welcome-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15, 30, 50, .55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: welcomeFadeIn .25s ease-out;
+}
+.welcome-overlay.hidden { display: none; }
+@keyframes welcomeFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.welcome-modal {
+  background: white;
+  border-radius: 14px;
+  max-width: 540px; width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.30);
+  overflow: hidden;
+  animation: welcomePop .28s cubic-bezier(.2,.9,.3,1.2);
+}
+@keyframes welcomePop {
+  from { transform: translateY(12px) scale(.97); opacity: 0; }
+  to   { transform: translateY(0) scale(1);     opacity: 1; }
+}
+.welcome-head {
+  padding: 22px 28px 18px;
+  background: linear-gradient(135deg, var(--azul) 0%, var(--azul-dk) 100%);
+  color: white;
+  display: flex; gap: 14px; align-items: center;
+}
+.welcome-icon {
+  flex-shrink: 0;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--laranja);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+}
+.welcome-title {
+  font-size: 17px; font-weight: 700; letter-spacing: -.2px;
+}
+.welcome-body {
+  padding: 22px 28px 24px;
+  font-size: 14px; line-height: 1.6; color: var(--text);
+}
+.welcome-body p { margin-bottom: 12px; }
+.welcome-body p:last-child { margin-bottom: 0; }
+.welcome-body strong { color: var(--azul); font-weight: 700; }
+.welcome-actions {
+  padding: 0 28px 24px;
+  display: flex; justify-content: flex-end;
+}
+.welcome-btn {
+  padding: 11px 26px;
+  background: var(--azul); color: white;
+  border: none; border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .17s;
+  font-family: var(--font);
+}
+.welcome-btn:hover { background: var(--azul-dk); transform: translateY(-1px); }
 
 /* Printing */
 @media print {
@@ -528,6 +599,26 @@ input, textarea { font-family: var(--font); }
   </style>
 </head>
 <body>
+
+<!-- ════════════════════════════════════════════════════
+     WELCOME / WARNING MODAL
+════════════════════════════════════════════════════ -->
+<div id="welcome-overlay" class="welcome-overlay">
+  <div class="welcome-modal" role="dialog" aria-labelledby="welcome-title">
+    <div class="welcome-head">
+      <div class="welcome-icon">!</div>
+      <div class="welcome-title" id="welcome-title">Atenção antes de começar</div>
+    </div>
+    <div class="welcome-body">
+      <p>Este aplicativo <strong>não salva nenhuma informação automaticamente</strong>. Toda vez que a página for fechada ou recarregada, os dados preenchidos serão perdidos.</p>
+      <p>Para guardar um plano elaborado, use o botão <strong>Salvar</strong> na barra superior e um arquivo será baixado para o seu computador.</p>
+      <p>Para continuar editando um plano salvo anteriormente, basta clicar em <strong>Abrir</strong> e selecionar o arquivo.</p>
+    </div>
+    <div class="welcome-actions">
+      <button class="welcome-btn" onclick="closeWelcomeModal()">Entendi, começar</button>
+    </div>
+  </div>
+</div>
 
 <!-- ════════════════════════════════════════════════════
      EDITOR VIEW
@@ -813,8 +904,25 @@ const SUB_COLORS = {
 let RECIPE_LINKS = {};
 for (const m of MEALS) RECIPE_LINKS[m.id] = [];
 
+/* Reference image groups for the "Exemplos" section.
+   Each group maps to a sub-folder of "IMAGENS PLANO" containing
+   numbered .jpg files (1.jpg, 2.jpg, ..., N.jpg). */
+const EXAMPLE_GROUPS = [
+  { id:'cafe',   title:'Café da Manhã',                  emoji:'☀️', color:'#E8A148', folder:'CAFÉ DA MANHÃ',                   count:6 },
+  { id:'lanche', title:'Lanche da Manhã, Tarde ou Noite', emoji:'🍎', color:'#FE7E91', folder:'LANCHE DA MANHÃ, TARDE OU NOITE', count:4 },
+  { id:'almoco', title:'Almoço',                          emoji:'🍛', color:'#296092', folder:'ALMOÇO',                          count:8 },
+  { id:'jantar', title:'Jantar',                          emoji:'🌙', color:'#439273', folder:'JANTAR',                          count:8 },
+];
+
+function exampleImagePath(folder, n) {
+  return encodeURI('IMAGENS PLANO/' + folder + '/' + n + '.jpg');
+}
+
 let IDEIAS_IMGS = {};
-for (const m of MEALS) IDEIAS_IMGS[m.id] = ['', '', ''];
+for (const g of EXAMPLE_GROUPS) {
+  IDEIAS_IMGS[g.id] = [];
+  for (let i = 1; i <= g.count; i++) IDEIAS_IMGS[g.id].push(exampleImagePath(g.folder, i));
+}
 
 let currentTab = 0;
 
@@ -990,28 +1098,27 @@ function buildIdeiasGridEditor() {
   const cont = document.getElementById('ideias-grid-editor');
   if (!cont) return;
   cont.innerHTML = '';
-  MEALS.forEach((m, mi) => {
-    const imgs = IDEIAS_IMGS[m.id] || ['', '', ''];
+  EXAMPLE_GROUPS.forEach((g) => {
+    const imgs = IDEIAS_IMGS[g.id] || [];
     let imgsHtml = '';
-    for (let ii = 0; ii < 3; ii++) {
-      const src = imgs[ii] || '';
+    imgs.forEach((src, ii) => {
       imgsHtml += `<div>
-        <div class="ideias-item ${src ? 'has-img' : 'empty'}" onclick="clickIdeiasItem(${mi},${ii})">
+        <div class="ideias-item ${src ? 'has-img' : 'empty'}" onclick="clickIdeiasItem('${g.id}',${ii})">
           ${src
-            ? `<img src="${src}" alt="${m.title} opção ${ii+1}">`
+            ? `<img src="${src}" alt="${g.title} opção ${ii+1}">`
             : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`}
         </div>
         <div class="ideias-label">Opção ${ii+1}</div>
       </div>`;
-    }
+    });
     cont.innerHTML += `<div class="ideias-meal-section">
-      <div class="ideias-meal-header" style="background:${m.color}">${m.emoji} ${m.title}</div>
+      <div class="ideias-meal-header" style="background:${g.color}">${g.emoji} ${g.title}</div>
       <div class="ideias-meal-imgs">${imgsHtml}</div>
     </div>`;
   });
 }
 
-function clickIdeiasItem(mi, ii) {
+function clickIdeiasItem(groupId, ii) {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
@@ -1020,8 +1127,8 @@ function clickIdeiasItem(mi, ii) {
     if (f) {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        if (!IDEIAS_IMGS[MEALS[mi].id]) IDEIAS_IMGS[MEALS[mi].id] = ['', '', ''];
-        IDEIAS_IMGS[MEALS[mi].id][ii] = ev.target.result;
+        if (!IDEIAS_IMGS[groupId]) IDEIAS_IMGS[groupId] = [];
+        IDEIAS_IMGS[groupId][ii] = ev.target.result;
         buildIdeiasGridEditor();
       };
       reader.readAsDataURL(f);
@@ -1138,11 +1245,6 @@ function buildPlanSheet() {
       <div class="doc-inst-item" contenteditable="true">Respeite e tenha flexibilidade para lidar com situações inesperadas. Se um dia não conseguir comer tão bem, tudo certo, o importante é seguir uma rotina alimentar baseada em alimentos in natura ou minimamente processados na maioria dos dias.</div>
       <div class="doc-inst-item" contenteditable="true">Algumas estratégias simples podem facilitar sua rotina alimentar. Uma delas é cozinhar em maior quantidade, garantindo preparações culinárias para uma próxima refeição ou para elaborar marmitas para o dia seguinte. Aproveitar as sobras também é uma ótima alternativa: elas podem ser transformadas em novas receitas, evitando desperdícios e trazendo mais praticidade e economia. Experimente também variar temperos naturais, como ervas e especiarias — além de saudáveis, elas dão mais sabor e tornam as refeições muito mais interessantes.</div>
       <div class="doc-inst-item" contenteditable="true">Tome ÁGUA ao longo do dia, este deve ser o líquido protagonista em sua rotina. Tente observar seus primeiros sinais de sede e satisfazer de pronto a necessidade de água sinalizada pelo seu organismo, isso ajudará a garantir uma boa hidratação.</div>
-    </div>
-
-    <div style="margin:28px 0;page-break-inside:avoid;">
-      <div class="doc-sec-title">Prato Brasileiro</div>
-      <img src="PRATOBRASILEIRO.png" alt="Prato Brasileiro" style="width:100%;border-radius:8px;border:1px solid #dde3ec;display:block;" />
     </div>`;
 
   // Meals with suggestions
@@ -1183,7 +1285,8 @@ function buildPlanSheet() {
   });
 
   // Substitutions
-  html += `<div class="doc-sec-title">Lista de Substituições por Grupo Alimentar</div>
+  html += `<div style="page-break-before:always;"></div>
+    <div class="doc-sec-title">Lista de Substituições por Grupo Alimentar</div>
     <div class="doc-subs-grid">`;
   Object.entries(SUBS).forEach(([group]) => {
     const gid = slugify(group);
@@ -1198,16 +1301,22 @@ function buildPlanSheet() {
   });
   html += `</div>`;
 
+  // Prato Brasileiro
+  html += `<div style="margin:28px 0;page-break-inside:avoid;page-break-before:always;">
+      <div class="doc-sec-title">Prato Brasileiro</div>
+      <img src="PRATOBRASILEIRO.png" alt="Prato Brasileiro" style="width:100%;border-radius:8px;border:1px solid #dde3ec;display:block;" />
+    </div>`;
+
   // Exemplos de preparações
   const hasIdeias = Object.values(IDEIAS_IMGS).some(imgs => imgs.some(Boolean));
   if (hasIdeias) {
-    html += `<div class="doc-sec-title">Exemplos de Preparações</div>`;
-    MEALS.forEach((m) => {
-      const imgs = IDEIAS_IMGS[m.id] || ['', '', ''];
+    html += `<div class="doc-sec-title" style="page-break-before:always;">Exemplos de Preparações</div>`;
+    EXAMPLE_GROUPS.forEach((g) => {
+      const imgs = IDEIAS_IMGS[g.id] || [];
       if (imgs.some(Boolean)) {
         html += `<div style="margin-bottom:20px;page-break-inside:avoid;">
-          <div class="doc-meal-head" style="background:${m.color};border-radius:8px 8px 0 0;">${m.emoji} ${m.title}</div>
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:14px;background:#f9fafb;border:1px solid #dde3ec;border-top:none;border-radius:0 0 8px 8px;">`;
+          <div class="doc-meal-head" style="background:${g.color};border-radius:8px 8px 0 0;">${g.emoji} ${g.title}</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f9fafb;border:1px solid #dde3ec;border-top:none;border-radius:0 0 8px 8px;">`;
         imgs.forEach((src, ii) => {
           if (src) {
             html += `<div style="text-align:center;">
@@ -1391,10 +1500,27 @@ function printAll() {
   window.print();
 }
 
+/* ── WELCOME MODAL ────────────────────────────────── */
+function closeWelcomeModal() {
+  const ov = document.getElementById('welcome-overlay');
+  if (!ov) return;
+  ov.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function openWelcomeModal() {
+  const ov = document.getElementById('welcome-overlay');
+  if (!ov) return;
+  ov.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
 /* ── INIT ────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
   buildMealsUI();
   buildSubsUI();
+  // Block scroll while welcome modal is visible
+  document.body.style.overflow = 'hidden';
 });
 
 </script>
