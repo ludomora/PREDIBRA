@@ -71,6 +71,17 @@ input, textarea { font-family: var(--font); }
   border: 1px solid rgba(255,255,255,.25);
 }
 .ed-action-btn:hover { background: rgba(255,255,255,.22); }
+.ed-help-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all .17s;
+  background: var(--laranja); color: white;
+  border: 1px solid rgba(255,255,255,.4);
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-left: 4px; font-family: var(--font);
+  line-height: 1;
+}
+.ed-help-btn:hover { background: #d68f3a; transform: scale(1.08); }
 
 /* ════════════════════════════════════════════════════════
    EDITOR – STEPPER
@@ -611,8 +622,9 @@ input, textarea { font-family: var(--font); }
     </div>
     <div class="welcome-body">
       <p>Este aplicativo <strong>não salva nenhuma informação automaticamente</strong>. Toda vez que a página for fechada ou recarregada, os dados preenchidos serão perdidos.</p>
-      <p>Para guardar um plano elaborado, use o botão <strong>Salvar</strong> na barra superior e um arquivo será baixado para o seu computador.</p>
-      <p>Para continuar editando um plano salvo anteriormente, basta clicar em <strong>Abrir</strong> e selecionar o arquivo.</p>
+      <p>Para guardar um rascunho do plano em elaboração, use o botão <strong>Salvar rascunho</strong> na barra superior e um arquivo será baixado para o seu computador.</p>
+      <p>Para continuar editando um rascunho salvo anteriormente, basta clicar em <strong>Abrir rascunho</strong> e selecionar o arquivo.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:14px;">💡 Você pode reabrir estas instruções a qualquer momento clicando no botão <strong style="color:var(--laranja)">?</strong> ao lado dos botões na barra superior.</p>
     </div>
     <div class="welcome-actions">
       <button class="welcome-btn" onclick="closeWelcomeModal()">Entendi, começar</button>
@@ -629,7 +641,7 @@ input, textarea { font-family: var(--font); }
   <header class="ed-header">
     <div class="ed-brand">
       <div class="ed-logo">
-        <img src="LogoPredibra.svg" alt="PREDIBRA" />
+        <img src="LogoPredibra-curve.svg" alt="PREDIBRA" />
       </div>
       <div>
         <div class="ed-title">Plano Alimentar</div>
@@ -637,8 +649,9 @@ input, textarea { font-family: var(--font); }
       </div>
     </div>
     <div class="ed-actions">
-      <button class="ed-action-btn" onclick="importPlan()">📂 Abrir</button>
-      <button class="ed-action-btn" onclick="exportPlan()">💾 Salvar</button>
+      <button class="ed-action-btn" onclick="importPlan()">📂 Abrir rascunho</button>
+      <button class="ed-action-btn" onclick="exportPlan()">💾 Salvar rascunho</button>
+      <button class="ed-help-btn" onclick="openWelcomeModal()" title="Ver instruções iniciais" aria-label="Ver instruções iniciais">?</button>
     </div>
     <div class="ed-badge">Beta</div>
   </header>
@@ -672,7 +685,7 @@ input, textarea { font-family: var(--font); }
     <div class="tab-panel active" id="tab-0">
       <div class="inst-hero">
         <h1>Instruções do Plano Alimentar</h1>
-        <p>Estas orientações serão incluídas no documento gerado para o paciente</p>
+        <p>Estas orientações serão incluídas no documento gerado para o participante</p>
       </div>
       <div class="card">
         <div class="card-title"><span class="dot" style="background:var(--laranja)"></span>Para começar</div>
@@ -693,12 +706,12 @@ input, textarea { font-family: var(--font); }
     <!-- TAB 2: PLANO ALIMENTAR -->
     <div class="tab-panel" id="tab-1">
       <div class="card">
-        <div class="card-title"><span class="dot" style="background:var(--azul)"></span>Dados do Paciente</div>
+        <div class="card-title"><span class="dot" style="background:var(--azul)"></span>Dados do Participante</div>
         <div class="patient-grid">
-          <div class="field-group"><label class="field-label">Nome</label><input class="field-input" id="p-nome" type="text" placeholder="Nome completo do paciente"/></div>
-          <div class="field-group"><label class="field-label">ID / Prontuário</label><input class="field-input" id="p-id" type="text" placeholder="Ex: 00123"/></div>
-          <div class="field-group"><label class="field-label">Data</label><input class="field-input" id="p-data" type="date"/></div>
-          <div class="field-group"><label class="field-label">Nutricionista / CRN</label><input class="field-input" id="p-nutri" type="text" placeholder="Nome e número do CRN"/></div>
+          <div class="field-group"><label class="field-label">Nome completo do participante</label><input class="field-input" id="p-nome" type="text" placeholder="Nome completo do participante"/></div>
+          <div class="field-group"><label class="field-label">Data de nascimento</label><input class="field-input" id="p-nasc" type="date"/></div>
+          <div class="field-group"><label class="field-label">Data da teleconsulta</label><input class="field-input" id="p-data" type="date"/></div>
+          <div class="field-group"><label class="field-label">Nome do nutricionista e número CRN</label><input class="field-input" id="p-nutri" type="text" placeholder="Nome e número do CRN"/></div>
         </div>
       </div>
       <div id="meals-container"></div>
@@ -1203,7 +1216,7 @@ function showGenSec(idx) {
 /* ── BUILD PLAN SHEET ────────────────────────────────– */
 function buildPlanSheet() {
   const nome = v('p-nome') || '______________________________';
-  const id = v('p-id') || '____________';
+  const nasc = fmtDate(v('p-nasc')) || '___/___/______';
   const data = fmtDate(v('p-data')) || '___/___/______';
   const nutri = v('p-nutri') || '______________________________';
 
@@ -1220,19 +1233,19 @@ function buildPlanSheet() {
 
     <div class="doc-patient">
       <div class="doc-field">
-        <span class="doc-field-label">Nome do Paciente</span>
+        <span class="doc-field-label">Nome completo do participante</span>
         <span class="doc-field-value" contenteditable="true">${nome}</span>
       </div>
       <div class="doc-field">
-        <span class="doc-field-label">ID / Prontuário</span>
-        <span class="doc-field-value" contenteditable="true">${id}</span>
+        <span class="doc-field-label">Data de nascimento</span>
+        <span class="doc-field-value" contenteditable="true">${nasc}</span>
       </div>
       <div class="doc-field">
-        <span class="doc-field-label">Data</span>
+        <span class="doc-field-label">Data da teleconsulta</span>
         <span class="doc-field-value" contenteditable="true">${data}</span>
       </div>
       <div class="doc-field">
-        <span class="doc-field-label">Nutricionista / CRN</span>
+        <span class="doc-field-label">Nome do nutricionista e número CRN</span>
         <span class="doc-field-value" contenteditable="true">${nutri}</span>
       </div>
     </div>
@@ -1396,7 +1409,7 @@ function exportPlan() {
 
   const patient = {
     nome:  v('p-nome'),
-    id:    v('p-id'),
+    nasc:  v('p-nasc'),
     data:  v('p-data'),
     nutri: v('p-nutri'),
   };
@@ -1426,9 +1439,9 @@ function exportPlan() {
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
-  const name = patient.nome ? patient.nome.replace(/\s+/g, '_') : 'plano';
+  const name = patient.nome ? patient.nome.replace(/\s+/g, '_') : 'participante';
   const date = patient.data || new Date().toISOString().split('T')[0];
-  a.download = `plano_${name}_${date}.json`;
+  a.download = `rascunho_${name}_${date}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -1457,7 +1470,7 @@ function applyState(state) {
   // Patient
   if (state.patient) {
     document.getElementById('p-nome').value  = state.patient.nome  || '';
-    document.getElementById('p-id').value    = state.patient.id    || '';
+    document.getElementById('p-nasc').value  = state.patient.nasc  || '';
     document.getElementById('p-data').value  = state.patient.data  || '';
     document.getElementById('p-nutri').value = state.patient.nutri || '';
   }
