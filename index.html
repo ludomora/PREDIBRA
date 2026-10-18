@@ -71,6 +71,9 @@ input, textarea { font-family: var(--font); }
   border: 1px solid rgba(255,255,255,.25);
 }
 .ed-action-btn:hover { background: rgba(255,255,255,.22); }
+a.ed-action-btn { text-decoration: none; display: inline-flex; align-items: center; }
+.ed-action-btn.manual { background: white; color: var(--azul); border-color: white; }
+.ed-action-btn.manual:hover { background: var(--azul-lt); }
 .ed-help-btn {
   width: 28px; height: 28px;
   border-radius: 50%; font-size: 14px; font-weight: 700;
@@ -263,39 +266,6 @@ input, textarea { font-family: var(--font); }
 .meal-btn-del:hover { background: var(--rosa); color: white; }
 
 /* ════════════════════════════════════════════════════════
-   SUBSTITUTIONS
-════════════════════════════════════════════════════════ */
-.subs-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
-}
-.sub-group { background: white; padding: 18px; border-radius: var(--r); box-shadow: var(--shadow); }
-.sub-title {
-  font-size: 13px; font-weight: 700; color: white; padding: 8px 12px;
-  border-radius: 6px; margin-bottom: 14px; display: block;
-}
-.sub-list { display: flex; flex-direction: column; gap: 8px; }
-.sub-item {
-  display: flex; gap: 8px; align-items: center;
-  padding: 8px; background: #fafbfd; border-radius: 6px;
-}
-.sub-item input {
-  flex: 1; padding: 6px 8px; border: 1px solid var(--border);
-  border-radius: 4px; font-size: 12px; color: var(--text);
-}
-.sub-item button {
-  padding: 4px 8px; background: transparent; color: var(--rosa);
-  border: 1px solid var(--border); border-radius: 4px; font-size: 11px;
-  cursor: pointer; transition: all .17s;
-}
-.sub-item button:hover { background: var(--rosa); color: white; }
-.sub-add {
-  padding: 8px 12px; background: var(--azul); color: white;
-  border: none; border-radius: 6px; font-size: 12px; font-weight: 600;
-  cursor: pointer; margin-top: 12px; width: 100%; transition: all .17s;
-}
-.sub-add:hover { background: var(--azul-dk); }
-
-/* ════════════════════════════════════════════════════════
    RECIPE LINKS
 ════════════════════════════════════════════════════════ */
 .recipe-section {
@@ -460,14 +430,10 @@ input, textarea { font-family: var(--font); }
   padding: 10px 12px; border: 1px solid var(--border); background: white;
 }
 .doc-cell {
-  min-height: 40px; padding: 6px 0; word-break: break-word;
+  min-height: 40px; padding: 6px 0; word-break: break-word; white-space: pre-line;
 }
 
 .doc-sec-title { font-size: 14px; font-weight: 700; color: var(--text); margin: 28px 0 16px; }
-.doc-subs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-.doc-sub-group { padding: 12px; background: #fafbfd; border-radius: 8px; }
-.doc-sub-title { font-size: 12px; font-weight: 600; color: var(--azul); margin-bottom: 8px; }
-.doc-sub-items { font-size: 11px; line-height: 1.6; color: var(--text); }
 
 .doc-recipe-section { margin: 28px 0; }
 .doc-recipe-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 14px; }
@@ -513,15 +479,19 @@ input, textarea { font-family: var(--font); }
   .ideias-meal-imgs { grid-template-columns: repeat(2, 1fr); }
 }
 .ideias-item {
-  aspect-ratio: 1; border: 2px dashed var(--border); border-radius: 8px;
-  cursor: pointer; overflow: hidden; position: relative; background: var(--azul-lt);
-  display: flex; align-items: center; justify-content: center; transition: all .2s;
+  aspect-ratio: 3 / 2; border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; background: var(--azul-lt);
 }
-.ideias-item:hover { border-color: var(--azul); border-style: solid; }
-.ideias-item img { width: 100%; height: 100%; object-fit: cover; }
-.ideias-item.empty svg { width: 32px; height: 32px; color: var(--muted); opacity: .4; }
-.ideias-item.has-img { border-style: solid; border-color: var(--border); }
-.ideias-label { font-size: 11px; margin-top: 6px; text-align: center; color: var(--muted); }
+.ideias-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ideias-label { font-size: 11px; line-height: 1.4; margin-top: 6px; text-align: center; color: var(--muted); }
+.doc-meal-sugs-title {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .4px; margin-bottom: 8px;
+}
+.doc-meal-sug-num { font-weight: 700; color: var(--azul); }
+.meal-sug-num { font-size: 11px; font-weight: 700; color: var(--azul); white-space: nowrap; padding-top: 8px; }
+.doc-inst-item { display: flex; gap: 10px; }
+.doc-inst-icon { font-size: 16px; line-height: 1.3; flex-shrink: 0; }
 
 /* ════════════════════════════════════════════════════════
    WELCOME MODAL
@@ -605,7 +575,6 @@ input, textarea { font-family: var(--font); }
   .sheet { box-shadow: none; border-radius: 0; margin: 0; max-width: 100%; }
   .sheet-inner { padding: 20mm 22mm; }
   .doc-meal { page-break-inside: avoid; }
-  .doc-subs-grid { page-break-inside: avoid; }
 }
   </style>
 </head>
@@ -624,6 +593,7 @@ input, textarea { font-family: var(--font); }
       <p>Este aplicativo <strong>não salva nenhuma informação automaticamente</strong>. Toda vez que a página for fechada ou recarregada, os dados preenchidos serão perdidos.</p>
       <p>Para guardar um rascunho do plano em elaboração, use o botão <strong>Salvar rascunho</strong> na barra superior e um arquivo será baixado para o seu computador.</p>
       <p>Para continuar editando um rascunho salvo anteriormente, basta clicar em <strong>Abrir rascunho</strong> e selecionar o arquivo.</p>
+      <p>O botão <strong>Manual</strong> abre o Manual de Teleconsultas em outra aba, sem perder o que já foi preenchido aqui.</p>
       <p style="font-size:12px;color:var(--muted);margin-top:14px;">💡 Você pode reabrir estas instruções a qualquer momento clicando no botão <strong style="color:var(--laranja)">?</strong> ao lado dos botões na barra superior.</p>
     </div>
     <div class="welcome-actions">
@@ -649,6 +619,7 @@ input, textarea { font-family: var(--font); }
       </div>
     </div>
     <div class="ed-actions">
+      <a class="ed-action-btn manual" href="manual/index.html" target="_blank" rel="noopener" title="Abrir o Manual de Teleconsultas em outra aba">📘 Manual</a>
       <button class="ed-action-btn" onclick="importPlan()">📂 Abrir rascunho</button>
       <button class="ed-action-btn" onclick="exportPlan()">💾 Salvar rascunho</button>
       <button class="ed-help-btn" onclick="openWelcomeModal()" title="Ver instruções iniciais" aria-label="Ver instruções iniciais">?</button>
@@ -665,16 +636,13 @@ input, textarea { font-family: var(--font); }
       <span class="step-num">2</span>Plano Alimentar
     </button>
     <button class="step-btn" onclick="showTab(2,this)">
-      <span class="step-num">3</span>Substituições
+      <span class="step-num">3</span>Links de Receitas
     </button>
     <button class="step-btn" onclick="showTab(3,this)">
-      <span class="step-num">4</span>Prato Brasileiro
+      <span class="step-num">4</span>Meu PF Saudável
     </button>
     <button class="step-btn" onclick="showTab(4,this)">
-      <span class="step-num">5</span>Exemplos
-    </button>
-    <button class="step-btn" onclick="showTab(5,this)">
-      <span class="step-num">6</span>Links de Receitas
+      <span class="step-num">5</span>Exemplos de refeições
     </button>
   </nav>
 
@@ -689,17 +657,7 @@ input, textarea { font-family: var(--font); }
       </div>
       <div class="card">
         <div class="card-title"><span class="dot" style="background:var(--laranja)"></span>Para começar</div>
-        <div class="inst-list">
-          <div class="inst-item"><span class="inst-icon">🍽️</span><div class="inst-text">Lembre-se que o plano alimentar é uma <strong>sugestão de organização de cardápio</strong> a partir de combinações dos grupos alimentares. Neste plano há três sugestões de cardápios, mas que não precisam compor o modelo "um para cada dia". Você poderá se basear nas refeições propostas e personalizá-las de acordo com suas necessidades diárias. A combinação dos grupos dependerá da sua vontade, disponibilidade de alimentos e criatividade do dia;</div></div>
-          <div class="inst-item"><span class="inst-icon">🔄</span><div class="inst-text">Variações em torno das combinações sugeridas são bem-vindas, essas alterações feitas com substituições entre tipos de alimentos com composição nutricional e uso culinário semelhantes tornarão a alimentação ainda mais saudável, ampliando a diversidade de alimentos em seu repertório alimentar. Busque acomodar suas preferências pessoais, além de priorizar alimentos regionais e da época. Você poderá fazer adaptações utilizando a <strong>lista de substituições</strong> de alimentos segundo os grupos alimentares, sugerida no final do seu plano alimentar;</div></div>
-          <div class="inst-item"><span class="inst-icon">🥗</span><div class="inst-text">Utilize o modelo do <strong>PRATO</strong> para saber como distribuir os grupos alimentares no prato. Lembre-se que as quantidades dependem da sua fome e saciedade. Preste atenção aos sinais do corpo, coma devagar e se possível em companhia;</div></div>
-          <div class="inst-item"><span class="inst-icon">💚</span><div class="inst-text">Respeite e tenha flexibilidade para lidar com situações inesperadas. Se um dia não conseguir comer tão bem, tudo certo, o importante é seguir uma rotina alimentar baseada em <strong>alimentos <em>in natura</em> ou minimamente processados</strong> na maioria dos dias.</div></div>
-          <div class="inst-item"><span class="inst-icon">🍳</span><div class="inst-text">Algumas estratégias simples podem facilitar sua rotina alimentar. Uma delas é cozinhar em maior quantidade, garantindo preparações culinárias para uma próxima refeição ou para elaborar marmitas para o dia seguinte. Aproveitar as sobras também é uma ótima alternativa: elas podem ser transformadas em novas receitas, evitando desperdícios e trazendo mais praticidade e economia. Experimente também variar temperos naturais, como ervas e especiarias — além de saudáveis, elas dão mais sabor e tornam as refeições muito mais interessantes.</div></div>
-          <div class="inst-item"><span class="inst-icon">💧</span><div class="inst-text">Tome <strong>ÁGUA</strong> ao longo do dia, este deve ser o líquido protagonista em sua rotina. Tente observar seus primeiros sinais de sede e satisfazer de pronto a necessidade de água sinalizada pelo seu organismo, isso ajudará a garantir uma boa hidratação.</div></div>
-        </div>
-      </div>
-      <div class="notes-box">
-        <strong>*</strong> Caso utilize ingredientes culinários como açúcar, manteiga, azeite, óleos e sal, faça o uso com moderação.
+        <div class="inst-list" id="inst-list"><!-- populated by JS --></div>
       </div>
     </div>
 
@@ -715,48 +673,41 @@ input, textarea { font-family: var(--font); }
         </div>
       </div>
       <div id="meals-container"></div>
+      <div class="notes-box">
+        <strong>*</strong> Caso utilize ingredientes culinários como açúcar, manteiga, azeite, óleos e sal, faça o uso com moderação. &nbsp;
+        <strong>**</strong> Carne seca, pão de queijo, queijos, iogurtes e alguns pães podem ter versões ultraprocessadas — analise sempre a lista de ingredientes.
+      </div>
     </div>
 
-    <!-- TAB 3: SUBSTITUIÇÕES -->
+    <!-- TAB 3: LINKS DE RECEITAS -->
     <div class="tab-panel" id="tab-2">
       <div class="card" style="margin-bottom:18px">
-        <div class="card-title"><span class="dot" style="background:var(--verde)"></span>Lista de Substituições por Grupo Alimentar</div>
-        <p style="font-size:13px;color:var(--muted)">Pré-preenchida com sugestões do plano base. Edite, exclua ou adicione alimentos livremente.</p>
-      </div>
-      <div class="subs-grid" id="subs-container"></div>
-    </div>
-
-    <!-- TAB 4: PRATO BRASILEIRO (VIEW ONLY) -->
-    <div class="tab-panel" id="tab-3">
-      <div class="card" style="margin-bottom:18px">
-        <div class="card-title"><span class="dot" style="background:var(--verde)"></span>Prato Brasileiro — Material Educativo</div>
-        <p style="font-size:13px;color:var(--muted)">Utilize este modelo para orientar a distribuição dos grupos alimentares no prato</p>
-      </div>
-      <div>
-        <img src="PRATOBRASILEIRO_V2.png" alt="Prato Brasileiro" style="width:100%;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:block;" />
-      </div>
-    </div>
-
-    <!-- TAB 5: EXEMPLOS (VIEW ONLY) -->
-    <div class="tab-panel" id="tab-4">
-      <div class="card" style="margin-bottom:18px">
-        <div class="card-title"><span class="dot" style="background:var(--laranja)"></span>Ideias de Preparações</div>
-        <p style="font-size:13px;color:var(--muted)">Clique nos quadros para inserir imagens das preparações sugeridas para cada refeição</p>
-      </div>
-      <div style="max-width: 900px; margin: 0 auto;">
-        <div class="ideias-grid" id="ideias-grid-editor">
-          <!-- populated by JS -->
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 6: LINKS DE RECEITAS (NEW) -->
-    <div class="tab-panel" id="tab-5">
-      <div class="card" style="margin-bottom:18px">
-        <div class="card-title"><span class="dot" style="background:var(--rosa)"></span>Links de Receitas por Refeição</div>
-        <p style="font-size:13px;color:var(--muted)">Adicione até 10 links de receitas por refeição (título e URL)</p>
+        <div class="card-title"><span class="dot" style="background:var(--rosa)"></span>Links de Receitas</div>
+        <p style="font-size:13px;color:var(--muted)">Escolha as preparações que possam interessar ao participante no repositório de receitas no Drive e coloque até 5 links de receitas por refeição (título e URL).</p>
       </div>
       <div id="recipe-links-container"></div>
+    </div>
+
+    <!-- TAB 4: MEU PF SAUDÁVEL (VIEW ONLY) -->
+    <div class="tab-panel" id="tab-3">
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-title"><span class="dot" style="background:var(--verde)"></span>Meu PF Saudável — Material Educativo</div>
+        <p style="font-size:13px;color:var(--muted)">Utilize este modelo para orientar a distribuição dos grupos alimentares e suas proporções no prato</p>
+      </div>
+      <div>
+        <img src="MEUPFSAUDAVEL.svg" alt="Meu PF Saudável" style="width:100%;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:block;background:white;" />
+      </div>
+    </div>
+
+    <!-- TAB 5: EXEMPLOS DE REFEIÇÕES (VIEW ONLY) -->
+    <div class="tab-panel" id="tab-4">
+      <div class="card" style="margin-bottom:18px">
+        <div class="card-title"><span class="dot" style="background:var(--laranja)"></span>Exemplos de refeições</div>
+        <p style="font-size:13px;color:var(--muted)">Estas imagens serão incluídas no documento gerado para o participante</p>
+      </div>
+      <div style="max-width: 900px; margin: 0 auto;">
+        <div id="ideias-grid-editor"><!-- populated by JS --></div>
+      </div>
     </div>
 
   </div>
@@ -805,6 +756,15 @@ input, textarea { font-family: var(--font); }
 <script>
 /* ── DATA ─────────────────────────────────────────────── */
 
+const INSTRUCOES = [
+  { icon:'🍽️', html:'Lembre-se que o plano alimentar é uma <strong>sugestão de organização de cardápio</strong> a partir de combinações dos grupos alimentares. Neste plano há três sugestões de cardápios, tente seguir as sugestões até a próxima teleconsulta. Você poderá se basear nas refeições propostas e personalizá-las de acordo com suas necessidades diárias. A combinação dos grupos dependerá da sua vontade, disponibilidade de alimentos e criatividade do dia;' },
+  { icon:'🔄', html:'Variações em torno das combinações sugeridas são bem-vindas, essas alterações feitas com substituições entre tipos de alimentos com composição nutricional e uso culinário semelhantes tornarão a alimentação ainda mais saudável, ampliando a diversidade de alimentos em seu repertório alimentar. Busque acomodar suas preferências pessoais, além de priorizar alimentos regionais e da época. Você poderá fazer adaptações variando as preparações para cada refeição, conforme sugerido no plano alimentar;' },
+  { icon:'🥗', html:'Utilize o modelo do <strong>MEU PF SAUDÁVEL</strong> para saber como distribuir os grupos alimentares e suas proporções no prato. Lembre-se que as quantidades dependem da sua fome e saciedade. Preste atenção aos sinais do corpo, coma devagar e se possível em companhia;' },
+  { icon:'💚', html:'Respeite e tenha flexibilidade para lidar com situações inesperadas. Se um dia não conseguir seguir o plano, tudo certo, o importante é retomar as orientações nos outros dias.' },
+  { icon:'🍳', html:'Algumas estratégias simples podem facilitar sua rotina alimentar. Uma delas é cozinhar em maior quantidade, garantindo preparações culinárias para uma próxima refeição ou para elaborar marmitas para o dia seguinte. Aproveitar as sobras também é uma ótima alternativa: elas podem ser transformadas em novas receitas, evitando desperdícios e trazendo mais praticidade e economia. Experimente também variar temperos naturais, como ervas e especiarias — além de saudáveis, elas dão mais sabor e tornam as refeições muito mais interessantes.' },
+  { icon:'💧', html:'Tome <strong>ÁGUA</strong> ao longo do dia, este deve ser o líquido protagonista em sua rotina. Tente observar seus primeiros sinais de sede e satisfazer de pronto a necessidade de água sinalizada pelo seu organismo, isso ajudará a garantir uma boa hidratação.' },
+];
+
 const MEALS = [
   {
     id:'cafe', title:'Café da Manhã', emoji:'☀️', color:'#E8A148', optional:false,
@@ -836,11 +796,11 @@ const MEALS = [
   },
   {
     id:'almoco', title:'Almoço', emoji:'🍛', color:'#296092', optional:false,
-    groups:['Cereais, raízes e/ou tubérculos','Feijões','Legumes','Verduras','Carnes ou ovos','Frutas ou doce (opcional)'],
+    groups:['Cereais, raízes e/ou tubérculos','Feijões','Legumes e verduras','Carnes ou ovos','Frutas ou doce (opcional)'],
     sugs:[
-      ['Arroz branco','Feijão carioca','Abóbora com alecrim','Alface com cebola em tiras','Coxa de frango com páprica doce e tomilho','Goiaba'],
-      ['Arroz branco (baião de dois)','Feijão fradinho (baião de dois)','Vinagrete de tomate, cebola e salsa','Couve com alho frito','Carne seca** (baião de dois)','Laranja'],
-      ['Arroz branco com cenoura ralada','Feijão preto','Tomate em cubos (repolho refogado)','Repolho com açafrão','Filé de tilápia grelhado','Cocada caseira'],
+      ['Arroz branco','Feijão carioca','Abóbora com alecrim\nAlface com cebola em tiras','Coxa de frango com páprica doce e tomilho','Goiaba'],
+      ['Arroz branco (baião de dois)','Feijão fradinho (baião de dois)','Vinagrete de tomate, cebola e salsa\nCouve com alho frito','Carne seca** (baião de dois)','Laranja'],
+      ['Arroz branco com cenoura ralada','Feijão preto','Tomate em cubos (repolho refogado)\nRepolho com açafrão','Filé de tilápia grelhado','Cocada caseira'],
     ],
     mealSugs: [
       'Arroz branco, feijão carioca, abóbora assada com alecrim, alface com cebola em tiras, coxa de frango assada com páprica doce e tomilho e goiaba.',
@@ -864,16 +824,16 @@ const MEALS = [
   },
   {
     id:'jantar', title:'Jantar', emoji:'🌙', color:'#439273', optional:false,
-    groups:['Cereais, raízes e/ou tubérculos','Feijões','Legumes','Verduras','Carnes ou ovos','Frutas ou doce (opcional)'],
+    groups:['Cereais, raízes e/ou tubérculos','Feijões','Legumes e verduras','Carnes ou ovos','Frutas ou doce (opcional)'],
     sugs:[
-      ['Macarrão (salada de macarrão)','Ervilhas (salada de macarrão)','Abobrinha italiana (salada de macarrão)','Rúcula','Tiras de frango (salada de macarrão)','-'],
-      ['Arroz branco (arroz com lentilha)','Lentilha (arroz com lentilha)','Cenoura (salada de alface com cenoura e gergelim)','Alface (salada de alface com cenoura e gergelim)','Ovo cozido','Abacaxi'],
-      ['Macarrão (caldo de feijão)','Feijão carioca (caldo de feijão)','-','Cebolinha','-','-'],
+      ['Macarrão (salada de macarrão)','Ervilhas (salada de macarrão)','Abobrinha italiana (salada de macarrão)\nRúcula','Tiras de frango (salada de macarrão)','-'],
+      ['Arroz branco (arroz com lentilha)','Lentilha (arroz com lentilha)','Cenoura (salada de alface com cenoura e gergelim)\nAlface (salada de alface com cenoura e gergelim)','Ovo cozido','Abacaxi'],
+      ['Batata (caldo de feijão)','Feijão carioca (caldo de feijão)','Cenoura (caldo de feijão)\nCebolinha','-','-'],
     ],
     mealSugs: [
       'Macarrão com tiras de frango e abobrinha italiana, ervilhas, lascas de queijo parmesão e molho branco, acompanhada de salada de rúcula.',
       'Arroz com lentilha, alface com cenoura ralada e gergelim, ovo cozido e rodelas de abacaxi.',
-      'Caldo de feijão com macarrão conchinha e cebolinha.'
+      'Caldo de feijão com batata, cenoura e cebolinha.'
     ]
   },
   {
@@ -892,49 +852,50 @@ const MEALS = [
   },
 ];
 
-const SUBS = {
-  'Cereais, raízes e tubérculos':['Arroz branco','Arroz integral','Aveia','Batata','Batata doce','Cará','Cuscuz','Farinhas','Inhame','Macarrão','Mandioca / Macaxeira / Aipim','Mandioquinha / Batata baroa','Milho','Pão','Polenta','Tapioca'],
-  'Feijões':['Ervilha','Feijão branco','Feijão carioca','Feijão-de-corda','Feijão fava','Feijão fradinho','Feijão mulatinho','Feijão preto','Feijão verde','Feijão vermelho','Grão-de-bico','Lentilha'],
-  'Castanhas, nozes e sementes':['Amêndoas','Amendoim','Castanha de caju','Castanha de baru','Castanha do Pará / Brasil','Nozes','Sementes de girassol','Sementes de gergelim'],
-  'Legumes':['Abóbora','Abobrinha','Alho','Beterraba','Berinjela','Brócolis','Cebola','Cenoura','Chuchu','Jiló','Maxixe','Pepino','Pimentão','Quiabo','Tomate'],
-  'Verduras':['Acelga','Agrião','Alface','Almeirão','Catalonha','Chicória','Couve','Escarola','Ervas (temperos)','Espinafre','Ora-pro-nóbis','Repolho roxo','Repolho verde','Rúcula'],
-  'Carnes e ovos':['Carne bovina','Carne de cabrito','Carne de cordeiro','Carne suína','Frango / Aves','Ovos','Pescados','Cogumelos'],
-  'Leite e queijos':['Coalhada','Iogurte natural','Leite de vaca','Queijo minas / branco**','Queijo mussarela**','Ricota'],
-  'Frutas':['Abacaxi','Abacate','Araçá','Açaí','Acerola','Ameixa','Banana','Caju','Cajá','Cacau','Cupuaçu','Figo','Goiaba','Jaca','Jabuticaba','Limão','Laranja','Melancia','Morango','Mamão','Melão','Pera','Manga','Maracujá','Murici','Pequi','Pitanga','Pitomba','Romã','Seriguela','Tamarindo','Tangerina / Mexerica','Uva','Umbu'],
-};
-
-const SUB_COLORS = {
-  'Cereais, raízes e tubérculos':'#E8A148',
-  'Feijões':'#296092',
-  'Castanhas, nozes e sementes':'#7a5230',
-  'Legumes':'#439273',
-  'Verduras':'#2e7d32',
-  'Carnes e ovos':'#c0392b',
-  'Leite e queijos':'#1565c0',
-  'Frutas':'#d63a6a',
-};
-
-let RECIPE_LINKS = {};
-for (const m of MEALS) RECIPE_LINKS[m.id] = [];
-
-/* Reference image groups for the "Exemplos" section.
-   Each group maps to a sub-folder of "IMAGENS PLANO" containing
-   numbered .jpg files (1.jpg, 2.jpg, ..., N.jpg). */
-const EXAMPLE_GROUPS = [
-  { id:'cafe',   title:'Café da Manhã',                  emoji:'☀️', color:'#E8A148', folder:'CAFÉ DA MANHÃ',                   count:6 },
-  { id:'lanche', title:'Lanche da Manhã, Tarde ou Noite', emoji:'🍎', color:'#FE7E91', folder:'LANCHE DA MANHÃ, TARDE OU NOITE', count:4 },
-  { id:'almoco', title:'Almoço',                          emoji:'🍛', color:'#296092', folder:'ALMOÇO',                          count:8 },
-  { id:'jantar', title:'Jantar',                          emoji:'🌙', color:'#439273', folder:'JANTAR',                          count:8 },
+const MAX_RECIPE_LINKS = 5;
+const RECIPE_CATS = [
+  { id:'cafe',          title:'Café da manhã', emoji:'☀️' },
+  { id:'almoco_jantar', title:'Almoço/Jantar', emoji:'🍛' },
+  { id:'lanches',       title:'Lanches',       emoji:'🍎' },
 ];
 
-function exampleImagePath(folder, n) {
-  return encodeURI('IMAGENS PLANO/' + folder + '/' + n + '.jpg');
-}
+let RECIPE_LINKS = {};
+for (const c of RECIPE_CATS) RECIPE_LINKS[c.id] = [];
 
-let IDEIAS_IMGS = {};
-for (const g of EXAMPLE_GROUPS) {
-  IDEIAS_IMGS[g.id] = [];
-  for (let i = 1; i <= g.count; i++) IDEIAS_IMGS[g.id].push(exampleImagePath(g.folder, i));
+/* Photos live in the sub-folders of "IMAGENS PLANO" (file = folder/number.jpg). */
+const EXAMPLE_GROUPS = [
+  { id:'cafe', title:'Café da manhã', emoji:'☀️', color:'#E8A148', items:[
+    ['CAFÉ DA MANHÃ/1', 'Cuscuz, ovo cozido, banana e leite.'],
+    ['CAFÉ DA MANHÃ/2', 'Café com leite, pão de queijo e mamão.'],
+    ['CAFÉ DA MANHÃ/3', 'Café com leite, beiju, queijo coalho e mamão.'],
+    ['CAFÉ DA MANHÃ/4', 'Pão francês com manteiga, mamão e suco de laranja.'],
+    ['CAFÉ DA MANHÃ/5', 'Café com leite, tapioca e banana.'],
+    ['CAFÉ DA MANHÃ/6', 'Café com leite, cuscuz e manga.'],
+  ]},
+  { id:'almoco_jantar', title:'Almoço/Jantar', emoji:'🍛', color:'#296092', items:[
+    ['ALMOÇO/1', 'Arroz, feijão, coxa de frango assada, beterraba e polenta com queijo.'],
+    ['ALMOÇO/3', 'Alface, arroz, lentilha, pernil, batata, repolho e abacaxi.'],
+    ['ALMOÇO/4', 'Alface, tomate, feijão, farinha de mandioca, peixe e cocada.'],
+    ['ALMOÇO/5', 'Feijão, arroz, vinagrete de cebola e tomate, farofa, couve refogada e laranja.'],
+    ['ALMOÇO/6', 'Salada de tomate, arroz, feijão, bife grelhado e salada de frutas.'],
+    ['ALMOÇO/7', 'Arroz, feijão, angu, abóbora, quiabo e mamão.'],
+    ['ALMOÇO/8', 'Alface e tomate, arroz, feijão, berinjela e suco de cupuaçu.'],
+    ['JANTAR/1', 'Arroz, feijão, fígado bovino e abobrinha refogada.'],
+    ['JANTAR/4', 'Alface, tomate, arroz, feijão, omelete e mandioca de forno.'],
+    ['JANTAR/5', 'Sopa de legumes, farinha de mandioca e açaí.'],
+    ['JANTAR/6', 'Salada de folhas, macarrão e galeto.'],
+    ['JANTAR/8', 'Arroz, feijão, carne moída com legumes.'],
+  ]},
+  { id:'lanches', title:'Lanches', emoji:'🍎', color:'#FE7E91', items:[
+    ['LANCHE DA MANHÃ, TARDE OU NOITE/1', 'Iogurte natural com morangos.'],
+    ['LANCHE DA MANHÃ, TARDE OU NOITE/2', 'Castanhas e amendoim.'],
+    ['LANCHE DA MANHÃ, TARDE OU NOITE/3', 'Vitamina de mamão com leite.'],
+    ['LANCHE DA MANHÃ, TARDE OU NOITE/4', 'Salada de frutas.'],
+  ]},
+];
+
+function exampleImagePath(file) {
+  return encodeURI('IMAGENS PLANO/' + file + '.jpg');
 }
 
 let currentTab = 0;
@@ -943,7 +904,6 @@ let currentTab = 0;
 function v(id) { return document.getElementById(id)?.value || ''; }
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 function fmtDate(d) { if (!d) return ''; const [y,m,da] = d.split('-'); return `${da}/${m}/${y}`; }
-function slugify(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 function autoGrow(ta) { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2) + 'px'; }
 
 function collectState() {
@@ -961,21 +921,19 @@ function showTab(idx, btn) {
   if (btn) btn.classList.add('active');
 
   const nextBtn = document.getElementById('next-btn');
-  if (idx === 5) {
+  if (idx === LAST_TAB) {
     nextBtn.textContent = '✦ Gerar Plano Alimentar';
     nextBtn.onclick = () => generatePlan();
   } else {
     nextBtn.textContent = 'Avançar →';
     nextBtn.onclick = () => nextTab();
   }
-
-  if (idx === 3) loadPratoBrasileiro(true);
-  if (idx === 4) buildIdeiasGridEditor();
-  if (idx === 5) buildRecipeLinksUI();
 }
 
+const LAST_TAB = 4;
+
 function nextTab() {
-  if (currentTab < 5) showTab(currentTab + 1, document.querySelectorAll('.step-btn')[currentTab + 1]);
+  if (currentTab < LAST_TAB) showTab(currentTab + 1, document.querySelectorAll('.step-btn')[currentTab + 1]);
 }
 
 function prevTab() {
@@ -1001,11 +959,12 @@ function buildMealsUI() {
           </div>
 
           <div class="meal-sugs-section">
-            <div class="meal-sugs-title">Sugestão para a Refeição Inteira</div>
+            <div class="meal-sugs-title">Sugestões de refeições completas</div>
             <div id="meal-sug-list-${mi}">`;
 
     m.mealSugs.forEach((sug, si) => {
       html += `<div class="meal-sug-item">
+        <span class="meal-sug-num">Sugestão ${si+1}</span>
         <textarea class="meal-sug-textarea" id="meal-sug-${mi}-${si}"
           placeholder="Descreva a sugestão completa para esta refeição..."
           oninput="MEALS[${mi}].mealSugs[${si}]=this.value">${esc(sug)}</textarea>
@@ -1072,125 +1031,71 @@ function removeMealSug(mi, si) {
   buildMealsUI();
 }
 
-/* ── SUBSTITUTIONS UI ────────────────────────────────– */
-function buildSubsUI() {
-  const cont = document.getElementById('subs-container');
-  cont.innerHTML = '';
-  Object.entries(SUBS).forEach(([group, items]) => {
-    const gid = slugify(group);
-    const color = SUB_COLORS[group] || '#999';
-    let html = `<div class="sub-group">
-      <div class="sub-title" style="background:${color}">${group}</div>
-      <div class="sub-list" id="sl-${gid}">`;
-    items.forEach((item, idx) => {
-      html += `<div class="sub-item">
-        <input type="text" value="${esc(item)}" />
-        <button onclick="this.parentElement.remove()">✕</button>
-      </div>`;
-    });
-    html += `</div><button class="sub-add" onclick="addSubItem('${gid}')">＋ Adicionar</button></div>`;
-    cont.innerHTML += html;
-  });
+/* ── INSTRUCTIONS UI ─────────────────────────────────– */
+function buildInstructionsUI() {
+  document.getElementById('inst-list').innerHTML = INSTRUCOES.map(it =>
+    `<div class="inst-item"><span class="inst-icon">${it.icon}</span><div class="inst-text">${it.html}</div></div>`
+  ).join('');
 }
 
-function addSubItem(gid) {
-  const list = document.getElementById(`sl-${gid}`);
-  const div = document.createElement('div');
-  div.className = 'sub-item';
-  div.innerHTML = '<input type="text" placeholder="Novo item" /><button onclick="this.parentElement.remove()">✕</button>';
-  list.appendChild(div);
-}
-
-/* ── PRATO BRASILEIRO ────────────────────────────────– */
-function loadPratoBrasileiro(isEditor = false) {
-  // no-op: image is embedded directly in HTML
-}
-
-/* ── IDEIAS GRID ────────────────────────────────────– */
+/* ── EXEMPLOS GRID ──────────────────────────────────– */
 function buildIdeiasGridEditor() {
-  const cont = document.getElementById('ideias-grid-editor');
-  if (!cont) return;
-  cont.innerHTML = '';
-  EXAMPLE_GROUPS.forEach((g) => {
-    const imgs = IDEIAS_IMGS[g.id] || [];
-    let imgsHtml = '';
-    imgs.forEach((src, ii) => {
-      imgsHtml += `<div>
-        <div class="ideias-item ${src ? 'has-img' : 'empty'}" onclick="clickIdeiasItem('${g.id}',${ii})">
-          ${src
-            ? `<img src="${src}" alt="${g.title} opção ${ii+1}">`
-            : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>`}
-        </div>
-        <div class="ideias-label">Opção ${ii+1}</div>
-      </div>`;
-    });
-    cont.innerHTML += `<div class="ideias-meal-section">
+  document.getElementById('ideias-grid-editor').innerHTML = EXAMPLE_GROUPS.map(g => `
+    <div class="ideias-meal-section">
       <div class="ideias-meal-header" style="background:${g.color}">${g.emoji} ${g.title}</div>
-      <div class="ideias-meal-imgs">${imgsHtml}</div>
-    </div>`;
-  });
-}
-
-function clickIdeiasItem(groupId, ii) {
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.onchange = (e) => {
-    const f = e.target.files[0];
-    if (f) {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        if (!IDEIAS_IMGS[groupId]) IDEIAS_IMGS[groupId] = [];
-        IDEIAS_IMGS[groupId][ii] = ev.target.result;
-        buildIdeiasGridEditor();
-      };
-      reader.readAsDataURL(f);
-    }
-  };
-  input.click();
+      <div class="ideias-meal-imgs">${g.items.map(([file, caption]) => `
+        <div>
+          <div class="ideias-item"><img src="${exampleImagePath(file)}" alt="${esc(caption)}"></div>
+          <div class="ideias-label">${esc(caption)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
 }
 
 /* ── RECIPE LINKS ────────────────────────────────────– */
 function buildRecipeLinksUI() {
   const cont = document.getElementById('recipe-links-container');
-  if (!cont) return;
   cont.innerHTML = '';
-  MEALS.forEach((m) => {
+  RECIPE_CATS.forEach((c) => {
     const section = document.createElement('div');
     section.className = 'recipe-section';
-    let html = `<div class="recipe-section-title">${m.emoji} ${m.title}</div>
-      <div id="recipe-list-${m.id}">`;
-    if (!RECIPE_LINKS[m.id]) RECIPE_LINKS[m.id] = [];
-    RECIPE_LINKS[m.id].forEach((link, idx) => {
+    let html = `<div class="recipe-section-title">${c.emoji} ${c.title}</div>`;
+    RECIPE_LINKS[c.id].forEach((link, idx) => {
       html += `<div class="recipe-link-item">
-        <input type="text" placeholder="Título da receita" value="${esc(link.title || '')}" onchange="RECIPE_LINKS['${m.id}'][${idx}].title = this.value" />
-        <input type="url" placeholder="URL da receita" value="${esc(link.url || '')}" onchange="RECIPE_LINKS['${m.id}'][${idx}].url = this.value" />
-        <button onclick="removeRecipeLink('${m.id}', ${idx})">✕</button>
+        <input type="text" placeholder="Título da receita" value="${esc(link.title || '')}" oninput="RECIPE_LINKS['${c.id}'][${idx}].title = this.value" />
+        <input type="url" placeholder="URL da receita (https://...)" value="${esc(link.url || '')}" oninput="RECIPE_LINKS['${c.id}'][${idx}].url = this.value" />
+        <button onclick="removeRecipeLink('${c.id}', ${idx})" title="Remover link">✕</button>
       </div>`;
     });
-    html += `</div>`;
     section.innerHTML = html;
     const addBtn = document.createElement('button');
     addBtn.className = 'recipe-add-btn';
-    addBtn.textContent = '＋ Adicionar Link';
-    addBtn.disabled = RECIPE_LINKS[m.id].length >= 10;
-    addBtn.onclick = () => addRecipeLink(m.id);
+    const n = RECIPE_LINKS[c.id].length;
+    addBtn.textContent = n >= MAX_RECIPE_LINKS ? `Limite de ${MAX_RECIPE_LINKS} links atingido` : `＋ Adicionar Link (${n}/${MAX_RECIPE_LINKS})`;
+    addBtn.disabled = n >= MAX_RECIPE_LINKS;
+    addBtn.onclick = () => addRecipeLink(c.id);
     section.appendChild(addBtn);
     cont.appendChild(section);
   });
 }
 
-function addRecipeLink(mealId) {
-  if (!RECIPE_LINKS[mealId]) RECIPE_LINKS[mealId] = [];
-  if (RECIPE_LINKS[mealId].length < 10) {
-    RECIPE_LINKS[mealId].push({title: '', url: ''});
+function addRecipeLink(catId) {
+  if (RECIPE_LINKS[catId].length < MAX_RECIPE_LINKS) {
+    RECIPE_LINKS[catId].push({title: '', url: ''});
     buildRecipeLinksUI();
   }
 }
 
-function removeRecipeLink(mealId, idx) {
-  RECIPE_LINKS[mealId].splice(idx, 1);
+function removeRecipeLink(catId, idx) {
+  RECIPE_LINKS[catId].splice(idx, 1);
   buildRecipeLinksUI();
+}
+
+function safeUrl(u) {
+  const t = (u || '').trim();
+  if (!t || /^https?:\/\//i.test(t)) return t;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(t)) return '';
+  return 'https://' + t;
 }
 
 /* ── GENERATE PLAN ────────────────────────────────────– */
@@ -1215,10 +1120,10 @@ function showGenSec(idx) {
 
 /* ── BUILD PLAN SHEET ────────────────────────────────– */
 function buildPlanSheet() {
-  const nome = v('p-nome') || '______________________________';
+  const nome = esc(v('p-nome')) || '______________________________';
   const nasc = fmtDate(v('p-nasc')) || '___/___/______';
   const data = fmtDate(v('p-data')) || '___/___/______';
-  const nutri = v('p-nutri') || '______________________________';
+  const nutri = esc(v('p-nutri')) || '______________________________';
 
   let html = `
     <div class="doc-header">
@@ -1252,12 +1157,7 @@ function buildPlanSheet() {
 
     <div class="doc-inst-title">Para começar</div>
     <div class="doc-inst-list">
-      <div class="doc-inst-item" contenteditable="true">Lembre-se que o plano alimentar é uma sugestão de organização de cardápio a partir de combinações dos grupos alimentares. Neste plano há três sugestões de cardápios, mas que não precisam compor o modelo "um para cada dia". Você poderá se basear nas refeições propostas e personalizá-las de acordo com suas necessidades diárias. A combinação dos grupos dependerá da sua vontade, disponibilidade de alimentos e criatividade do dia;</div>
-      <div class="doc-inst-item" contenteditable="true">Variações em torno das combinações sugeridas são bem-vindas, essas alterações feitas com substituições entre tipos de alimentos com composição nutricional e uso culinário semelhantes tornarão a alimentação ainda mais saudável, ampliando a diversidade de alimentos em seu repertório alimentar. Busque acomodar suas preferências pessoais, além de priorizar alimentos regionais e da época. Você poderá fazer adaptações utilizando a lista de substituições de alimentos segundo os grupos alimentares, sugerida no final do seu plano alimentar;</div>
-      <div class="doc-inst-item" contenteditable="true">Utilize o modelo do PRATO para saber como distribuir os grupos alimentares no prato. Lembre-se que as quantidades dependem da sua fome e saciedade. Preste atenção aos sinais do corpo, coma devagar e se possível em companhia;</div>
-      <div class="doc-inst-item" contenteditable="true">Respeite e tenha flexibilidade para lidar com situações inesperadas. Se um dia não conseguir comer tão bem, tudo certo, o importante é seguir uma rotina alimentar baseada em alimentos in natura ou minimamente processados na maioria dos dias.</div>
-      <div class="doc-inst-item" contenteditable="true">Algumas estratégias simples podem facilitar sua rotina alimentar. Uma delas é cozinhar em maior quantidade, garantindo preparações culinárias para uma próxima refeição ou para elaborar marmitas para o dia seguinte. Aproveitar as sobras também é uma ótima alternativa: elas podem ser transformadas em novas receitas, evitando desperdícios e trazendo mais praticidade e economia. Experimente também variar temperos naturais, como ervas e especiarias — além de saudáveis, elas dão mais sabor e tornam as refeições muito mais interessantes.</div>
-      <div class="doc-inst-item" contenteditable="true">Tome ÁGUA ao longo do dia, este deve ser o líquido protagonista em sua rotina. Tente observar seus primeiros sinais de sede e satisfazer de pronto a necessidade de água sinalizada pelo seu organismo, isso ajudará a garantir uma boa hidratação.</div>
+      ${INSTRUCOES.map(it => `<div class="doc-inst-item"><span class="doc-inst-icon">${it.icon}</span><div contenteditable="true">${it.html}</div></div>`).join('')}
     </div>`;
 
   // Meals with suggestions
@@ -1271,10 +1171,10 @@ function buildPlanSheet() {
       </div>`;
 
     if (m.mealSugs && m.mealSugs.some(s => s)) {
-      html += `<div class="doc-meal-sugs">`;
+      html += `<div class="doc-meal-sugs"><div class="doc-meal-sugs-title">Sugestões de refeições completas</div>`;
       m.mealSugs.forEach((sug, si) => {
         if (sug) {
-          html += `<div class="doc-meal-sug-item" contenteditable="true">${esc(sug)}</div>`;
+          html += `<div class="doc-meal-sug-item"><span class="doc-meal-sug-num">Sugestão ${si + 1}:</span> <span contenteditable="true">${esc(sug)}</span></div>`;
         }
       });
       html += `</div>`;
@@ -1297,81 +1197,52 @@ function buildPlanSheet() {
     html += `</tbody></table></div>`;
   });
 
-  // Substitutions
-  html += `<div style="page-break-before:always;"></div>
-    <div class="doc-sec-title">Lista de Substituições por Grupo Alimentar</div>
-    <div class="doc-subs-grid">`;
-  Object.entries(SUBS).forEach(([group]) => {
-    const gid = slugify(group);
-    const listEl = document.getElementById(`sl-${gid}`);
-    const items = listEl
-      ? Array.from(listEl.querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean)
-      : SUBS[group];
-    html += `<div class="doc-sub-group">
-      <div class="doc-sub-title">${group}</div>
-      <div class="doc-sub-items" contenteditable="true">${items.join(' · ')}</div>
-    </div>`;
-  });
-  html += `</div>`;
-
-  // Prato Brasileiro
-  html += `<div style="margin:28px 0;page-break-inside:avoid;page-break-before:always;">
-      <div class="doc-sec-title">Prato Brasileiro</div>
-      <img src="PRATOBRASILEIRO_V2.png" alt="Prato Brasileiro" style="width:100%;border-radius:8px;border:1px solid #dde3ec;display:block;" />
-    </div>`;
-
-  // Exemplos de preparações
-  const hasIdeias = Object.values(IDEIAS_IMGS).some(imgs => imgs.some(Boolean));
-  if (hasIdeias) {
-    html += `<div class="doc-sec-title" style="page-break-before:always;">Exemplos de Preparações</div>`;
-    EXAMPLE_GROUPS.forEach((g) => {
-      const imgs = IDEIAS_IMGS[g.id] || [];
-      if (imgs.some(Boolean)) {
-        html += `<div style="margin-bottom:20px;page-break-inside:avoid;">
-          <div class="doc-meal-head" style="background:${g.color};border-radius:8px 8px 0 0;">${g.emoji} ${g.title}</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f9fafb;border:1px solid #dde3ec;border-top:none;border-radius:0 0 8px 8px;">`;
-        imgs.forEach((src, ii) => {
-          if (src) {
-            html += `<div style="text-align:center;">
-              <img src="${src}" alt="Opção ${ii+1}" style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;border:1px solid #dde3ec;">
-              <div style="font-size:11px;color:#6b7a8d;margin-top:4px;">Opção ${ii+1}</div>
-            </div>`;
-          } else {
-            html += `<div style="min-height:80px;background:#f0f4f9;border-radius:6px;border:1px dashed #dde3ec;"></div>`;
-          }
-        });
-        html += `</div></div>`;
-      }
-    });
-  }
-
-  // Recipe links
-  const hasLinks = Object.values(RECIPE_LINKS).some(links => links.length > 0);
-  if (hasLinks) {
-    html += `<div class="doc-recipe-section">
-      <div class="doc-recipe-title">Links de Receitas</div>`;
-    MEALS.forEach((m) => {
-      if (RECIPE_LINKS[m.id] && RECIPE_LINKS[m.id].length > 0) {
-        html += `<div class="doc-recipe-meal-group">
-          <div class="doc-recipe-meal-name">${m.emoji} ${m.title}</div>`;
-        RECIPE_LINKS[m.id].forEach((link) => {
-          if (link.title || link.url) {
-            html += `<div class="doc-recipe-item">
-              ${link.title ? `<strong>${esc(link.title)}</strong>: ` : ''}${link.url ? `<a href="${esc(link.url)}" target="_blank">${esc(link.url)}</a>` : ''}
-            </div>`;
-          }
-        });
-        html += `</div>`;
-      }
-    });
-    html += `</div>`;
-  }
-
-  // Notes
+  // Notes (right after the meal plan)
   html += `<div class="doc-notes">
     <strong>*</strong> Caso utilize ingredientes culinários como açúcar, manteiga, azeite, óleos e sal, faça o uso com moderação. &nbsp;
     <strong>**</strong> Carne seca, pão de queijo, queijos, iogurtes e alguns pães podem ter versões ultraprocessadas — analise sempre a lista de ingredientes.
   </div>`;
+
+  // Recipe links
+  const filledLinks = (id) => RECIPE_LINKS[id].filter(l => l.title.trim() || safeUrl(l.url));
+  if (RECIPE_CATS.some(c => filledLinks(c.id).length)) {
+    html += `<div class="doc-recipe-section" style="page-break-inside:avoid;">
+      <div class="doc-recipe-title">Links de Receitas</div>`;
+    RECIPE_CATS.forEach((c) => {
+      const links = filledLinks(c.id);
+      if (!links.length) return;
+      html += `<div class="doc-recipe-meal-group">
+        <div class="doc-recipe-meal-name">${c.emoji} ${c.title}</div>`;
+      links.forEach((link) => {
+        const url = safeUrl(link.url);
+        html += `<div class="doc-recipe-item">
+          ${link.title.trim() ? `<strong>${esc(link.title.trim())}</strong>${url ? ': ' : ''}` : ''}${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a>` : ''}
+        </div>`;
+      });
+      html += `</div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Meu PF Saudável
+  html += `<div style="margin:28px 0;page-break-inside:avoid;page-break-before:always;">
+      <div class="doc-sec-title">Meu PF Saudável</div>
+      <img src="MEUPFSAUDAVEL.svg" alt="Meu PF Saudável" style="width:100%;border-radius:8px;border:1px solid #dde3ec;display:block;" />
+    </div>`;
+
+  // Exemplos de refeições
+  html += `<div class="doc-sec-title" style="page-break-before:always;">Exemplos de refeições</div>`;
+  EXAMPLE_GROUPS.forEach((g) => {
+    html += `<div style="margin-bottom:20px;page-break-inside:avoid;">
+      <div class="doc-meal-head" style="background:${g.color};border-radius:8px 8px 0 0;">${g.emoji} ${g.title}</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px;background:#f9fafb;border:1px solid #dde3ec;border-top:none;border-radius:0 0 8px 8px;">
+        ${g.items.map(([file, caption]) => `<div style="text-align:center;">
+          <img src="${exampleImagePath(file)}" alt="${esc(caption)}" style="width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:6px;border:1px solid #dde3ec;display:block;">
+          <div style="font-size:9.5px;line-height:1.35;color:#6b7a8d;margin-top:4px;">${esc(caption)}</div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  });
 
   // Assinatura digital
   html += `<div style="margin-top:40px;page-break-inside:avoid;">
@@ -1416,22 +1287,12 @@ function exportPlan() {
 
   const horarios = MEALS.map((_, mi) => v(`ht-${mi}`));
 
-  const subsState = {};
-  Object.keys(SUBS).forEach(group => {
-    const gid = slugify(group);
-    const listEl = document.getElementById(`sl-${gid}`);
-    subsState[group] = listEl
-      ? Array.from(listEl.querySelectorAll('input')).map(i => i.value.trim()).filter(Boolean)
-      : [...SUBS[group]];
-  });
-
   const state = {
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
     patient,
     horarios,
     meals: MEALS.map(m => ({ id: m.id, mealSugs: m.mealSugs, sugs: m.sugs })),
-    subs: subsState,
     recipeLinks: RECIPE_LINKS,
   };
 
@@ -1466,6 +1327,16 @@ function importPlan() {
   input.click();
 }
 
+/* Drafts saved before version 2 had separate "Legumes" and "Verduras" rows
+   (indices 2 and 3) and recipe links per meal instead of per category. */
+const OLD_LINK_CATEGORY = { lm:'lanches', lt:'lanches', ln:'lanches', almoco:'almoco_jantar', jantar:'almoco_jantar' };
+
+function mergeOldVegetableRows(row, meal) {
+  if (row.length !== meal.groups.length + 1) return row;
+  const veg = [row[2], row[3]].map(x => (x || '').trim()).filter(x => x && x !== '-');
+  return [row[0], row[1], veg.join('\n') || '-', ...row.slice(4)];
+}
+
 function applyState(state) {
   // Patient
   if (state.patient) {
@@ -1479,23 +1350,27 @@ function applyState(state) {
   if (state.meals) {
     state.meals.forEach(saved => {
       const m = MEALS.find(m => m.id === saved.id);
-      if (m) { m.mealSugs = saved.mealSugs; m.sugs = saved.sugs; }
-    });
-  }
-
-  // Subs
-  if (state.subs) {
-    Object.keys(state.subs).forEach(group => {
-      if (SUBS[group] !== undefined) SUBS[group] = state.subs[group];
+      if (!m) return;
+      m.mealSugs = saved.mealSugs;
+      m.sugs = saved.sugs.map(row => mergeOldVegetableRows(row, m));
     });
   }
 
   // Recipe links
-  if (state.recipeLinks) Object.assign(RECIPE_LINKS, state.recipeLinks);
+  if (state.recipeLinks) {
+    for (const c of RECIPE_CATS) RECIPE_LINKS[c.id] = [];
+    Object.entries(state.recipeLinks).forEach(([key, links]) => {
+      const cat = OLD_LINK_CATEGORY[key] || key;
+      if (!RECIPE_LINKS[cat]) return;
+      links.forEach(l => {
+        if (RECIPE_LINKS[cat].length < MAX_RECIPE_LINKS) RECIPE_LINKS[cat].push({ title: l.title || '', url: l.url || '' });
+      });
+    });
+  }
 
   // Rebuild UI
   buildMealsUI();
-  buildSubsUI();
+  buildRecipeLinksUI();
 
   // Restore horários (must come after rebuild)
   if (state.horarios) {
@@ -1530,8 +1405,10 @@ function openWelcomeModal() {
 
 /* ── INIT ────────────────────────────────────────── */
 window.addEventListener('DOMContentLoaded', () => {
+  buildInstructionsUI();
   buildMealsUI();
-  buildSubsUI();
+  buildRecipeLinksUI();
+  buildIdeiasGridEditor();
   // Block scroll while welcome modal is visible
   document.body.style.overflow = 'hidden';
 });
